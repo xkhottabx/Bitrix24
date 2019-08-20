@@ -13,9 +13,12 @@ import java.util.concurrent.TimeUnit;
 public class Hooks {
     @Before
     public void setUp(){
-        System.out.println("Before hooks");
+        Driver.get().manage().window().maximize();
         Driver.get().get(ConfigurationReader.get("url"));
-        Driver.get().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        Driver.get().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        Driver.get().manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+
+
     }
 
     @Before("@database")
@@ -25,7 +28,6 @@ public class Hooks {
 
     @After
     public void tearDown(Scenario scenario){
-        System.out.println("After hooks");
         // check if the scenario is failed
         if (scenario.isFailed()){
             // take that screenshot

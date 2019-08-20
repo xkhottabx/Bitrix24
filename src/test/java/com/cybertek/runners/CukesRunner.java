@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
                 "json:target/cucumber.json"},
         features = "src/test/resources/features/",
         glue = "com/cybertek/step_definitions",
-        tags = "@smoke",
+        tags = "@wip",
         dryRun = false
 )
 public class CukesRunner {
