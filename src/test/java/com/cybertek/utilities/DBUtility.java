@@ -39,7 +39,6 @@ public class DBUtility {
         List<Map<String,Object>> list = new ArrayList<>();
         ResultSetMetaData rsMData=resultSet.getMetaData();
         int colCount=rsMData.getColumnCount();
-
         while (resultSet.next()){
             Map<String,Object> rowMap = new HashMap<>();
             for(int col=1; col<=colCount; col++){

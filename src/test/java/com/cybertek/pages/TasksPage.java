@@ -6,6 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TasksPage extends HomePage {
     public TasksPage() {
         super();
@@ -45,6 +48,42 @@ public class TasksPage extends HomePage {
         driver.switchTo().frame
                 (driver.findElement(By.xpath("//div[@class='side-panel side-panel-container side-panel-container-open']//iframe")));
     }
+
+    @FindBy(xpath = "(//span[.='Task'])[2]")
+    public WebElement taskOption;
+
+    @FindBy(css = "input[data-bx-id='task-edit-title']")
+    public WebElement inputTaskTitle;
+
+    @FindBy(css = "button[id='blog-submit-button-save']")
+    public WebElement buttonSendTask;
+
+    public List<String> getTasksColumn(String columnName){
+        List<WebElement> column=new ArrayList<>();
+        byte numberOfColumn=0;
+        switch (columnName){
+            case "NAME": numberOfColumn=3; break;
+            case "DEADLINE": numberOfColumn=4; break;
+            case "CREATED BY": numberOfColumn=5; break;
+            case "RESPONSIBLE PERSON": numberOfColumn=6; break;
+        }
+        column=Driver.get().findElements(By.xpath("//table[@class='main-grid-table']//td["+numberOfColumn+"]"));
+        List<String> elemTexts = new ArrayList<>();
+        for (WebElement el : column) {
+            elemTexts.add(el.getText());
+        }
+        return elemTexts;
+    }
+
+    public int getTasksColumnSize(){
+        return getTasksColumn("NAME").size();
+    }
+
+
+
+
+
+
 
 
 

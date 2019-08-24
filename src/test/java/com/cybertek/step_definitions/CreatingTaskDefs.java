@@ -1,18 +1,20 @@
 package com.cybertek.step_definitions;
 
+import com.cybertek.utilities.ConfigurationReader;
 import com.cybertek.utilities.Driver;
 import com.cybertek.utilities.Pages;
+import com.github.javafaker.Faker;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+
+import java.util.NoSuchElementException;
 
 import static com.cybertek.utilities.BrowserUtils.*;
 
 public class CreatingTaskDefs {
     Pages pages=new Pages();
-
+    private String title=new Faker().gameOfThrones().quote();
 
 
     @When("I click on New Task")
@@ -23,11 +25,6 @@ public class CreatingTaskDefs {
         pages.tasksPage().switchToNewTaskWindow();
     }
 
-    @Then("I should be able to see the New Task Window")
-    public void i_should_be_able_to_see_the_New_Task_Window() {
-        Assert.assertEquals("Failed, 'New task' window did not come up", Driver.get().getCurrentUrl(),  "https://login.nextbasecrm.com/company/personal/user/513/tasks/task/edit/0/");
-
-    }
 
     @When("I click on Upload Files")
     public void iClickOnUploadFiles() {
@@ -63,7 +60,59 @@ public class CreatingTaskDefs {
 
     @When("I click on Activity stream")
     public void iClickOnActivityStream() {
-        pages.homePage().activityStream.click();
+        try {
+            pages.homePage().switchToModule("Activity Stream");
+        }catch (NoSuchElementException e){
+            if (Driver.get().getTitle().equalsIgnoreCase("Authorization")){
+                System.out.println("Application is not stable at this moment");
+            }
+            pages.homePage().switchToModule("Activity Stream");
+        }
+
         waitForUIOverlay();
     }
+
+    @When("I click on Task option")
+    public void i_click_on_Task_option() {
+        pages.tasksPage().taskOption.click();
+        waitForUIOverlay();
+    }
+
+    @When("I type in Things To Do window")
+    public void i_type_in_Things_To_Do_window() {
+
+        pages.tasksPage().inputTaskTitle.sendKeys(title);
+    }
+
+    @When("I click Send")
+    public void i_click_Send() {
+        pages.tasksPage().buttonSendTask.click();
+        waitForUIOverlay();
+    }
+
+    @When("I go to Tasks module")
+    public void i_go_to_Tasks_module() {
+        pages.homePage().switchToModule("Tasks");
+        waitForUIOverlay();
+    }
+
+    @Then("last row should contain name New Task and username for Created By and Responsible Columns")
+    public void last_row_should_contain_name_New_Task_and_username_for_Created_By_and_Responsible_Columns() {
+        int lastCellNumber=pages.tasksPage().getTasksColumnSize()-1;
+        String expectedName=title;
+        String actualName=pages.tasksPage().getTasksColumn("NAME").get(lastCellNumber);
+        String expectedCreatedBy= ConfigurationReader.get("username");
+        String actualCreatedBy=pages.tasksPage().getTasksColumn("CREATED BY").get(lastCellNumber);
+        String expectedResponsiblePerson= ConfigurationReader.get("username");
+        String actualResponsiblePerson=pages.tasksPage().getTasksColumn("RESPONSIBLE PERSON").get(lastCellNumber);
+        Assert.assertEquals(expectedName, actualName);
+        System.out.println(actualName);
+        Assert.assertEquals(expectedCreatedBy, actualCreatedBy);
+        System.out.println(actualCreatedBy);
+        Assert.assertEquals(expectedResponsiblePerson, actualResponsiblePerson);
+        System.out.println(actualResponsiblePerson);
+
+    }
+
+
 }

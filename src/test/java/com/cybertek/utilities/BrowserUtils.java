@@ -42,4 +42,6 @@ public class BrowserUtils {
         ((JavascriptExecutor) Driver.get()).executeScript("arguments[0].click();", element);
     }
 
+
+
 }
