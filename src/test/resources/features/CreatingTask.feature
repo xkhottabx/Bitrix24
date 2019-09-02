@@ -7,7 +7,7 @@ Feature: Create a task from Activity Stream
     Given I am on the login page
     When I login as a user
 
-
+  @wip
   Scenario:User should be able to create new task by clicking on tasks on activity stream.
     When I click on Activity stream
     And I click on Task option

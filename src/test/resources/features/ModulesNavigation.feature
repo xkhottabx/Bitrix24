@@ -6,7 +6,7 @@ Feature: Navigation to modules and pages title verification
     Given I am on the login page
     When I login as a user
 
-  @wip
+
   Scenario Outline: Verify module title
     When I click a "<module>"
     Then The title should be "<title>"
